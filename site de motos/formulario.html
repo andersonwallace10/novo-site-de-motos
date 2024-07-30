@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Registro</title>
+    <link rel="shortcut icon" href="icone moto/favicon.ico" type="image/x-icon">
+    <style>
+        .hidden { display: none; }
+    </style>
+</head>
+<body style="background-color:#fe9600;"
+>
+        <h1>Formulário para Contato</h1>
+    <nav>
+        <ul>
+            <li><a href="index.HTML">Pagina Inicial</a></li>
+            <li><a href="Galeria de Fotos.html">Fotos</a></li>
+            <li><a href="video sobre motos.html">Videos</a></li>
+            <li><a href="formulario.html">Formulario de Contato</a></li>
+    
+        </ul>
+    </nav>
+    
+    <form id="registrationForm">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        <br><br>
+
+        <label for="idade">Idade:</label>
+        <input type="number" id="idade" name="idade" required>
+        <br><br>
+
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado" required>
+            <option value="">Selecione um estado</option>
+            <option value="sp">São Paulo</option>
+            <option value="rj">Rio de Janeiro</option>
+            <option value="mg">Minas Gerais</option>
+            <option value="es">Espírito Santo</option>
+        </select>
+        <br><br>
+
+        <div id="cidadeContainer" class="hidden">
+            <label for="cidade">Cidade:</label>
+            <select id="cidade" name="cidade" required>
+                <option value="">Selecione uma cidade</option>
+            </select>
+        </div>
+        <br><br>
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+        <br><br>
+
+        <label for="confirmarSenha">Confirme a Senha:</label>
+        <input type="password" id="confirmarSenha" name="confirmarSenha" required>
+        <br><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        // Função para validar senha
+        function validarSenha(senha) {
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            return regex.test(senha);
+        }
+
+        // Função para validar o formulário
+        function validarFormulario(event) {
+            event.preventDefault();
+            const senha = document.getElementById('senha').value;
+            const confirmarSenha = document.getElementById('confirmarSenha').value;
+            const idade = parseInt(document.getElementById('idade').value, 10);
+            const estado = document.getElementById('estado').value;
+            const cidade = document.getElementById('cidade').value;
+
+            let mensagem = '';
+
+            // Verificar a idade
+            if (idade < 18) {
+                mensagem = 'Você deve ter 18 anos ou mais para se registrar.';
+            }
+
+            // Verificar a validade da senha
+            else if (!validarSenha(senha)) {
+                mensagem = 'A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma letra minúscula, um número e um caractere especial.';
+            }
+
+            // Verificar a confirmação da senha
+            else if (senha !== confirmarSenha) {
+                mensagem = 'As senhas não correspondem.';
+            }
+
+            // Verificar estado e cidade
+            else if (!estado) {
+                mensagem = 'Selecione um estado.';
+            } else if (!cidade) {
+                mensagem = 'Selecione uma cidade.';
+            }
+
+            if (mensagem) {
+                alert(mensagem);
+            } else {
+                alert('Formulário enviado com sucesso!');
+                document.getElementById('registrationForm').reset();
+            }
+        }
+
+        // Função para atualizar o campo cidade baseado na seleção do estado
+        function atualizarCidades() {
+            const estado = document.getElementById('estado').value;
+            const cidadeSelect = document.getElementById('cidade');
+            const cidadeContainer = document.getElementById('cidadeContainer');
+
+            cidadeSelect.innerHTML = '<option value="">Selecione uma cidade</option>';
+
+            const cidades = {
+                sp: ['São Paulo', 'Campinas', 'Santos'],
+                rj: ['Rio de Janeiro', 'Niterói', 'Cabo Frio'],
+                mg: ['Belo Horizonte', 'Uberlândia', 'Juiz de Fora'],
+                es: ['Vitória', 'Vila Velha', 'Serra']
+            };
+
+            if (cidades[estado]) {
+                cidades[estado].forEach(cidade => {
+                    const option = document.createElement('option');
+                    option.value = cidade;
+                    option.textContent = cidade;
+                    cidadeSelect.appendChild(option);
+                });
+                cidadeContainer.classList.remove('hidden');
+            } else {
+                cidadeContainer.classList.add('hidden');
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('estado').addEventListener('change', atualizarCidades);
+        document.getElementById('registrationForm').addEventListener('submit', validarFormulario);
+    </script>
+   
+   <footer>
+    <p class="center">© 2024 Todos os direitos reservados. </p>
+</footer>
+
+</body>
+</html>
